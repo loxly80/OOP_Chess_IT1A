@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OOP_Chess_IT1A"
         mc:Ignorable="d"
-        Title="MainWindow" Height="800" Width="800">
+        Title="MainWindow" Height="640" Width="640">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="5*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="23*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <TextBox Name="lblBoard" Text="Label" IsReadOnly="True" Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch"/>
 
     </Grid>
 </Window>

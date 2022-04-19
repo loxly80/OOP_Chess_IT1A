@@ -61,6 +61,20 @@ namespace OOP_Chess_IT1A
             figures.Add(new Figure(FigureType.Pawn, "F2", FigureColor.White));
             figures.Add(new Figure(FigureType.Pawn, "E2", FigureColor.White));
             figures.Add(new Figure(FigureType.Pawn, "D2", FigureColor.White));
+
+            lblBoard.Text = "";
+            foreach(Figure figure in figures)
+            {
+               lblBoard.Text += figure.ToString() + "\n";
+            }
+        }
+
+
+        public void DrawBoard(Canvas canvas)
+        {
+            Rectangle rectangle = new Rectangle();
+            rectangle.Width = canvas.Width / 8;
+            rectangle.Height = canvas.Height / 8;
         }
     }
 }
