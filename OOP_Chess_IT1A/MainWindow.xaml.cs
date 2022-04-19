@@ -25,6 +25,7 @@ namespace OOP_Chess_IT1A
         public MainWindow()
         {
             InitializeComponent();
+            figures = new List<Figure>(); 
             figures.Add(new Figure(FigureType.Rook, "A8", FigureColor.Black));
             figures.Add(new Figure(FigureType.Rook, "H8", FigureColor.Black));
             figures.Add(new Figure(FigureType.Knight, "B8", FigureColor.Black));
