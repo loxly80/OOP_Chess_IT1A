@@ -21,6 +21,8 @@
             <RowDefinition Height="23*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
+        
+        <Grid Name="ChessBoardGrid" Grid.Row="3" Grid.Column="1"/>
         <TextBox Name="lblBoard" Text="Label" IsReadOnly="True" Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="3" VerticalAlignment="Stretch"/>
 
     </Grid>
