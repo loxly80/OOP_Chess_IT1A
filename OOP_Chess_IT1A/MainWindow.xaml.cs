@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +21,59 @@ namespace OOP_Chess_IT1A
     /// </summary>
     public partial class MainWindow : Window
     {
+        Dictionary<int,string> columns = new Dictionary<int,string>();
+        Dictionary<int, string> rows = new Dictionary<int, string>();
         List<Figure> figures;
 
         public MainWindow()
         {
             InitializeComponent();
             figures = CreateFigures();
-
+            CreateDictionaries();
             ShowTextChessBoard();
             CreateBoard();
+            DrawFigures(figures);
+        }
+
+        private void DrawFigures(List<Figure> figures)
+        {
+            Rectangle rectangle = new Rectangle();
+            rectangle.HorizontalAlignment = HorizontalAlignment.Stretch;
+            rectangle.VerticalAlignment = VerticalAlignment.Stretch;
+            rectangle.Margin = new Thickness(5);
+            rectangle.Fill = new ImageBrush(GetImage(Properties.Resources.WhiteQueen));
+            
+            Grid.SetColumn(rectangle, 0);
+            Grid.SetRow(rectangle, 5);
+            ChessBoardGrid.Children.Add(rectangle);
+        }
+
+        private ImageSource GetImage(byte[] resource)
+        {
+            MemoryStream memoryStream = new MemoryStream(resource);
+            BitmapFrame bitmapFrame = BitmapFrame.Create(memoryStream);
+            Image image = new Image();
+            image.Source = bitmapFrame;
+            return image.Source;
+        }
+        public void CreateDictionaries()
+        {
+            columns.Add(0, "A");
+            columns.Add(1, "B");
+            columns.Add(2, "C");
+            columns.Add(3, "D");
+            columns.Add(4, "E");
+            columns.Add(5, "F");
+            columns.Add(6, "G");
+            columns.Add(7, "H");
+            rows.Add(0, "8");
+            rows.Add(1, "7");
+            rows.Add(2, "6");
+            rows.Add(3, "5");
+            rows.Add(4, "4");
+            rows.Add(5, "3");
+            rows.Add(6, "2");
+            rows.Add(7, "1");
         }
 
         public void ShowTextChessBoard()
@@ -96,8 +141,8 @@ namespace OOP_Chess_IT1A
 
                     Rectangle rectangle = new Rectangle();
                     rectangle.Stroke = new SolidColorBrush(Colors.Black);
-                    rectangle.StrokeThickness = 4;
-                    rectangle.Margin = new Thickness(-2);
+                    rectangle.StrokeThickness = 3;
+                    rectangle.Margin = new Thickness(-1.5);
                     rectangle.HorizontalAlignment = HorizontalAlignment.Stretch;
                     rectangle.VerticalAlignment = VerticalAlignment.Stretch;
                     if ((x + y) % 2 == 0)
@@ -115,8 +160,6 @@ namespace OOP_Chess_IT1A
                     ChessBoardGrid.Children.Add(rectangle);
                 }
             }
-
-            //ChessBoardGrid.ShowGridLines = true;
         }
     }
 }
