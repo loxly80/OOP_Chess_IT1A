@@ -24,6 +24,7 @@ namespace OOP_Chess_IT1A
         Dictionary<string,int> columns = new Dictionary<string,int>();
         Dictionary<string,int> rows = new Dictionary<string,int>();
         List<Figure> figures;
+        Figure selectedFigure;
 
         public MainWindow()
         {
@@ -55,6 +56,33 @@ namespace OOP_Chess_IT1A
             Grid.SetColumn(rectangle, indexCol);
             Grid.SetRow(rectangle, indexRow);
             ChessBoardGrid.Children.Add(rectangle);
+            rectangle.Tag = figure;
+            rectangle.MouseDown += Rectangle_MouseDown;
+        }
+
+        private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Rectangle rectangle = (Rectangle)sender; //přetypování z object na Rectangle
+            Figure figure = (Figure)rectangle.Tag;
+            if(selectedFigure == null)
+            {
+                selectedFigure = figure;
+                rectangle.Margin = new Thickness(0);
+                rectangle.Stroke = new SolidColorBrush(Colors.Lime);
+                rectangle.StrokeThickness = 5;
+            }
+            else if(selectedFigure == figure)
+            {
+                rectangle.StrokeThickness = 0;
+                rectangle.Margin = new Thickness(5);
+                selectedFigure = null;
+            }
+            else
+            {
+
+            }
+            
+            //MessageBox.Show($"Klik na {figure}");
         }
 
         private ImageSource GetImage(byte[] resource)
@@ -170,6 +198,11 @@ namespace OOP_Chess_IT1A
                     ChessBoardGrid.Children.Add(rectangle);
                 }
             }
+        }
+
+        private void ChessBoardGrid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
