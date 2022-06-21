@@ -21,8 +21,10 @@ namespace OOP_Chess_IT1A
     /// </summary>
     public partial class MainWindow : Window
     {
-        Dictionary<string,int> columns = new Dictionary<string,int>();
-        Dictionary<string,int> rows = new Dictionary<string,int>();
+        Dictionary<string,int> columnsToIndex = new Dictionary<string,int>();
+        Dictionary<string,int> rowsToIndex = new Dictionary<string,int>();
+        Dictionary<int,string> columnsFromIndex = new Dictionary<int, string>();
+        Dictionary<int,string> rowsFromIndex = new Dictionary<int, string>();
         List<Figure> figures;
         Figure selectedFigure;
 
@@ -32,7 +34,13 @@ namespace OOP_Chess_IT1A
             figures = CreateFigures();
             CreateDictionaries();
             ShowTextChessBoard();
-            CreateBoard();
+            RefreshBoard(true);
+        }
+
+        private void RefreshBoard(bool firstRender)
+        {
+            ChessBoardGrid.Children.Clear();
+            CreateBoard(firstRender);
             DrawFigures(figures);
         }
 
@@ -40,7 +48,10 @@ namespace OOP_Chess_IT1A
         {
             foreach(var figure in figures)
             {
-                DrawFigure(figure);
+                if (!string.IsNullOrEmpty(figure.Position))
+                {
+                    DrawFigure(figure);
+                }                
             }
         }
 
@@ -51,8 +62,8 @@ namespace OOP_Chess_IT1A
             rectangle.VerticalAlignment = VerticalAlignment.Stretch;
             rectangle.Margin = new Thickness(5);
             rectangle.Fill = new ImageBrush(GetImage(figure.Resource));
-            int indexCol = columns[figure.Position.Substring(0, 1)];
-            int indexRow = rows[figure.Position.Substring(1, 1)];
+            int indexCol = columnsToIndex[figure.Position.Substring(0, 1)];
+            int indexRow = rowsToIndex[figure.Position.Substring(1, 1)];
             Grid.SetColumn(rectangle, indexCol);
             Grid.SetRow(rectangle, indexRow);
             ChessBoardGrid.Children.Add(rectangle);
@@ -79,7 +90,10 @@ namespace OOP_Chess_IT1A
             }
             else
             {
-
+                selectedFigure.Position = figure.Position;
+                figure.Position = "";
+                selectedFigure = null;
+                RefreshBoard(false);
             }
             
             //MessageBox.Show($"Klik na {figure}");
@@ -96,22 +110,38 @@ namespace OOP_Chess_IT1A
 
         public void CreateDictionaries()
         {
-            columns.Add("A",0);
-            columns.Add("B",1);
-            columns.Add("C",2);
-            columns.Add("D",3);
-            columns.Add("E",4);
-            columns.Add("F",5);
-            columns.Add("G",6);
-            columns.Add("H",7);
-            rows.Add("8",0);
-            rows.Add("7",1);
-            rows.Add("6",2);
-            rows.Add("5",3);
-            rows.Add("4",4);
-            rows.Add("3",5);
-            rows.Add("2",6);
-            rows.Add("1",7);
+            columnsToIndex.Add("A",0);
+            columnsToIndex.Add("B",1);
+            columnsToIndex.Add("C",2);
+            columnsToIndex.Add("D",3);
+            columnsToIndex.Add("E",4);
+            columnsToIndex.Add("F",5);
+            columnsToIndex.Add("G",6);
+            columnsToIndex.Add("H",7);
+            rowsToIndex.Add("8",0);
+            rowsToIndex.Add("7",1);
+            rowsToIndex.Add("6",2);
+            rowsToIndex.Add("5",3);
+            rowsToIndex.Add("4",4);
+            rowsToIndex.Add("3",5);
+            rowsToIndex.Add("2",6);
+            rowsToIndex.Add("1",7);
+            columnsFromIndex.Add(0, "A");
+            columnsFromIndex.Add(1, "B");
+            columnsFromIndex.Add(2, "C");
+            columnsFromIndex.Add(3, "D");
+            columnsFromIndex.Add(4, "E");
+            columnsFromIndex.Add(5, "F");
+            columnsFromIndex.Add(6, "G");
+            columnsFromIndex.Add(7, "H");
+            rowsFromIndex.Add(0, "8");
+            rowsFromIndex.Add(1, "7");
+            rowsFromIndex.Add(2, "6");
+            rowsFromIndex.Add(3, "5");
+            rowsFromIndex.Add(4, "4");
+            rowsFromIndex.Add(5, "3");
+            rowsFromIndex.Add(6, "2");
+            rowsFromIndex.Add(7, "1");
         }
 
         public void ShowTextChessBoard()
@@ -165,13 +195,16 @@ namespace OOP_Chess_IT1A
             return figures;
         }
 
-        public void CreateBoard()
+        public void CreateBoard(bool createGrid)
         {
-            for (int i = 0; i < 8; i++)
+            if (createGrid)
             {
-                ChessBoardGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                ChessBoardGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
-            }
+                for (int i = 0; i < 8; i++)
+                {
+                    ChessBoardGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                    ChessBoardGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+                }
+            }            
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -191,6 +224,7 @@ namespace OOP_Chess_IT1A
                     {
                         rectangle.Fill = new SolidColorBrush(Color.FromRgb(128, 64, 0));
                     }
+                    rectangle.Tag = columnsFromIndex[x] + rowsFromIndex[y];
                     rectangle.MouseDown += Board_MouseDown;
 
                     Grid.SetColumn(rectangle, x);
@@ -202,7 +236,14 @@ namespace OOP_Chess_IT1A
 
         private void Board_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Klik na desku");
+            Rectangle rectangle = (Rectangle)sender;
+            //MessageBox.Show($"Klik na desku pole {rectangle.Tag}");
+            if(selectedFigure != null)
+            {
+                selectedFigure.Position = rectangle.Tag.ToString();
+                selectedFigure = null;
+                RefreshBoard(false);
+            }            
         }
 
         private void ChessBoardGrid_MouseDown(object sender, MouseButtonEventArgs e)
